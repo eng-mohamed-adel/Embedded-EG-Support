@@ -76,42 +76,32 @@
             max-width: 1200px;
         }
 
-        /* --- ستايل اللوجو المعدني الجديد --- */
+        /* ستايل اللوجو المعدني */
         .logo-text {
-            font-family: 'Roboto', sans-serif; /* خط إنجليزي قوي */
+            font-family: 'Roboto', sans-serif;
             font-size: 2rem;
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 2px;
-            
-            /* إنشاء التدرج المعدني */
             background: linear-gradient(
                 to right,
                 var(--metal-dark) 0%,
                 var(--metal-light) 25%,
-                var(--metal-shine) 50%, /* نقطة اللمعان البيضاء */
+                var(--metal-shine) 50%,
                 var(--metal-light) 75%,
                 var(--metal-dark) 100%
             );
-            /* جعل الخلفية أكبر من النص لتحريكها */
             background-size: 200% auto;
-            
-            /* قص الخلفية على شكل النص */
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            
-            /* إضافة ظل لإعطاء عمق 3D */
             text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
-            
-            /* أنميشن التحريك */
             animation: shineMetal 4s linear infinite reverse;
+            cursor: default;
         }
 
         @keyframes shineMetal {
-            to {
-                background-position: 200% center;
-            }
+            to { background-position: 200% center; }
         }
 
         .lang-btn {
@@ -238,18 +228,8 @@
             color: white;
         }
 
-        .card h3 { 
-            margin-bottom: 8px; 
-            font-size: 1.2rem;
-        }
-        
-        .card p { 
-            color: #aaa; 
-            font-size: 1rem; 
-            margin-bottom: 20px; 
-            font-family: 'Roboto', sans-serif; 
-            letter-spacing: 1px;
-        }
+        .card h3 { margin-bottom: 8px; font-size: 1.2rem; }
+        .card p { color: #aaa; font-size: 1rem; margin-bottom: 20px; font-family: 'Roboto', sans-serif; letter-spacing: 1px; }
 
         .action-hint {
             font-size: 0.85rem;
@@ -267,14 +247,73 @@
             font-weight: bold;
         }
 
-        /* Footer */
-        footer {
-            margin-top: auto;
-            padding: 30px;
-            font-size: 0.9rem;
-            color: #666;
-            font-family: 'Roboto', sans-serif;
+        /* --- ستايل المودال (النافذة المنبثقة) --- */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 2000; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0,0,0,0.8); 
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
         }
+
+        .modal-content {
+            background: linear-gradient(135deg, #001f52 0%, #000 100%);
+            border: 1px solid var(--accent-color);
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+            animation: zoomIn 0.3s ease;
+        }
+
+        @keyframes zoomIn {
+            from {transform: scale(0.8); opacity: 0;}
+            to {transform: scale(1); opacity: 1;}
+        }
+
+        .modal h3 {
+            margin-bottom: 20px;
+            color: var(--accent-color);
+        }
+
+        .modal-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid var(--glass-border);
+            color: white;
+            font-family: inherit;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .modal-btn:hover {
+            background: var(--primary-blue);
+            border-color: var(--accent-color);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 15px; /* سيتم عكسها في JS بناء على اللغة */
+            font-size: 25px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+        }
+        .close-modal:hover { color: white; }
 
         /* التنبيهات */
         .toast {
@@ -290,10 +329,8 @@
             opacity: 0;
             visibility: hidden;
             transition: 0.3s;
-            z-index: 1000;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            z-index: 3000;
         }
-
         .toast.show { opacity: 1; visibility: visible; bottom: 50px; }
 
         @keyframes fadeInUp {
@@ -301,7 +338,8 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* استجابة الشاشات */
+        footer { margin-top: auto; padding: 30px; font-size: 0.9rem; color: #666; font-family: 'Roboto', sans-serif; }
+
         @media (max-width: 600px) {
             .logo-text { font-size: 1.5rem; }
             h1.main-title { font-size: 1.8rem; }
@@ -319,7 +357,6 @@
 
     <header>
         <div class="logo-text">EMBEDDED EG</div>
-        
         <button class="lang-btn" onclick="toggleLanguage()">English</button>
     </header>
 
@@ -337,21 +374,21 @@
 
         <div class="payment-grid">
             
-            <div class="card" onclick="handleLocalPayment('01022613174', 'Vodafone Cash')">
+            <div class="card" onclick="handleVodafone()">
                 <i class="fa-solid fa-mobile-screen-button card-icon" style="color: var(--vodafone-red)"></i>
                 <h3>Vodafone Cash</h3>
                 <p>01022613174</p>
                 <span class="action-hint" id="hint1">اضغط للاتصال والتحويل</span>
             </div>
 
-            <div class="card" onclick="handleLocalPayment('01022613174', 'Telda')">
+            <div class="card" onclick="openTeldaModal()">
                 <i class="fa-regular fa-credit-card card-icon" style="color: #fff"></i>
                 <h3>Telda</h3>
-                <p>01022613174</p>
-                <span class="action-hint" id="hint2">اضغط لنسخ الرقم</span>
+                <p>@engm7med</p>
+                <span class="action-hint" id="hint2">اضغط لاختيار النسخ</span>
             </div>
 
-            <div class="card" onclick="handleLocalPayment('01022613174', 'myFawry')">
+            <div class="card" onclick="copyText('01022613174')">
                 <i class="fa-solid fa-wallet card-icon" style="color: #ffcc00"></i>
                 <h3>myFawry</h3>
                 <p>01022613174</p>
@@ -372,6 +409,19 @@
         &copy; 2026 Embedded EG Academy.
     </footer>
 
+    <div id="teldaModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeTeldaModal()">&times;</span>
+            <h3 id="modalTitle">اختر طريقة التحويل</h3>
+            <button class="modal-btn" onclick="copyTeldaUser()">
+                <span id="txtUser">نسخ اسم المستخدم</span> (@engm7med)
+            </button>
+            <button class="modal-btn" onclick="copyTeldaNumber()">
+                <span id="txtNum">نسخ رقم الهاتف</span> (0102...)
+            </button>
+        </div>
+    </div>
+
     <div class="toast" id="toast">تم الإجراء</div>
 
     <script>
@@ -382,9 +432,13 @@
                 labelAmount: "أدخل مبلغ الدعم",
                 currency: "ج.م",
                 hintVodafone: "اضغط للاتصال والتحويل",
+                hintTelda: "اضغط لاختيار النسخ",
                 hintCopy: "اضغط لنسخ الرقم",
                 hintPay: "اضغط للدفع المباشر",
-                toastCopy: "تم نسخ الرقم: ",
+                modalTitle: "اختر بيانات النسخ",
+                txtUser: "نسخ اسم المستخدم",
+                txtNum: "نسخ رقم الهاتف",
+                toastCopy: "تم النسخ: ",
                 toastErr: "من فضلك أدخل المبلغ أولاً",
                 toastCall: "جاري فتح الهاتف...",
                 langBtn: "English"
@@ -395,9 +449,13 @@
                 labelAmount: "Enter Donation Amount",
                 currency: "EGP",
                 hintVodafone: "Tap to Dial & Transfer",
+                hintTelda: "Tap to Select",
                 hintCopy: "Tap to Copy Number",
                 hintPay: "Tap to Pay",
-                toastCopy: "Number Copied: ",
+                modalTitle: "Select Detail to Copy",
+                txtUser: "Copy Username",
+                txtNum: "Copy Phone Number",
+                toastCopy: "Copied: ",
                 toastErr: "Please enter amount first",
                 toastCall: "Opening dialer...",
                 langBtn: "العربية"
@@ -405,25 +463,43 @@
         };
 
         let currentLang = 'ar';
+        const teldaNumber = "01022613174";
+        const teldaUser = "@engm7med";
 
         function toggleLanguage() {
             currentLang = currentLang === 'ar' ? 'en' : 'ar';
             const t = translations[currentLang];
             const btn = document.querySelector('.lang-btn');
             
+            // النصوص الرئيسية
             document.getElementById('title').textContent = t.title;
             document.getElementById('subtitle').textContent = t.subtitle;
             document.getElementById('labelAmount').textContent = t.labelAmount;
             document.getElementById('currency').textContent = t.currency;
             
+            // Hints
             document.getElementById('hint1').textContent = t.hintVodafone;
-            document.getElementById('hint2').textContent = t.hintCopy;
+            document.getElementById('hint2').textContent = t.hintTelda;
             document.getElementById('hint3').textContent = t.hintCopy;
             document.getElementById('hint4').textContent = t.hintPay;
 
+            // Modal Text
+            document.getElementById('modalTitle').textContent = t.modalTitle;
+            document.getElementById('txtUser').textContent = t.txtUser;
+            document.getElementById('txtNum').textContent = t.txtNum;
+
+            // Direction
             document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
             document.body.style.fontFamily = currentLang === 'ar' ? "'Cairo', sans-serif" : "'Roboto', sans-serif";
             
+            // Close button position fix
+            const closeBtn = document.querySelector('.close-modal');
+            if(currentLang === 'ar') {
+                closeBtn.style.right = 'auto'; closeBtn.style.left = '15px';
+            } else {
+                closeBtn.style.left = 'auto'; closeBtn.style.right = '15px';
+            }
+
             btn.textContent = t.langBtn;
         }
 
@@ -434,40 +510,60 @@
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
-        function handleLocalPayment(number, method) {
+        // --- Vodafone Logic ---
+        function handleVodafone() {
             const amount = document.getElementById('amountInput').value;
             const t = translations[currentLang];
-
-            // Vodafone Cash (USSD Call)
-            if (method === 'Vodafone Cash') {
-                if (!amount || amount <= 0) {
-                    showToast(t.toastErr);
-                    document.getElementById('amountInput').focus();
-                    return;
-                }
-                // *9*7*Number*Amount#
-                const ussdCode = `*9*7*${number}*${amount}%23`;
-                showToast(t.toastCall);
-                setTimeout(() => {
-                    window.location.href = `tel:${ussdCode}`;
-                }, 500);
+            
+            if (!amount || amount <= 0) {
+                showToast(t.toastErr);
+                document.getElementById('amountInput').focus();
                 return;
             }
+            // *9*7*Number*Amount#
+            const ussdCode = `*9*7*${teldaNumber}*${amount}%23`;
+            showToast(t.toastCall);
+            setTimeout(() => { window.location.href = `tel:${ussdCode}`; }, 500);
+        }
 
-            // Telda & Fawry (Copy only due to app limitations)
-            navigator.clipboard.writeText(number).then(() => {
-                showToast(t.toastCopy + number);
+        // --- Telda Modal Logic ---
+        function openTeldaModal() {
+            const modal = document.getElementById('teldaModal');
+            modal.style.display = "flex";
+        }
+        function closeTeldaModal() {
+            document.getElementById('teldaModal').style.display = "none";
+        }
+        // Close when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('teldaModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        function copyTeldaUser() {
+            copyText(teldaUser);
+            closeTeldaModal();
+        }
+        function copyTeldaNumber() {
+            copyText(teldaNumber);
+            closeTeldaModal();
+        }
+
+        // --- General Copy ---
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const t = translations[currentLang];
+                showToast(t.toastCopy + text);
             });
         }
 
+        // --- PayPal Logic ---
         function handlePaypal() {
             const amount = document.getElementById('amountInput').value;
-            // رابط باي بال المباشر
             let url = "https://paypal.me/webdesiner1"; 
-            
-            if (amount && amount > 0) {
-                url += "/" + amount;
-            }
+            if (amount && amount > 0) { url += "/" + amount; }
             window.open(url, '_blank');
         }
     </script>
