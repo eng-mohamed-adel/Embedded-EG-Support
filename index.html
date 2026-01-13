@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embedded EG - دعم المحتوى</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-blue: #0033cc;
+            --dark-bg: #000510;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-color: #ffffff;
+            --accent-color: #00d4ff;
+            --vodafone-red: #e60000;
+            /* ألوان التدرج المعدني */
+            --metal-dark: #4a5d7c;
+            --metal-light: #a3b4d1;
+            --metal-shine: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #001f52 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* خلفية متحركة */
+        .bg-circles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,51,204,0.3) 0%, rgba(0,0,0,0) 70%);
+            animation: float 10s infinite ease-in-out;
+        }
+
+        .c1 { width: 500px; height: 500px; top: -100px; left: -100px; }
+        .c2 { width: 400px; height: 400px; bottom: -50px; right: -50px; animation-delay: -5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, 50px); }
+        }
+
+        /* الرأس (Header) */
+        header {
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+        }
+
+        /* --- ستايل اللوجو المعدني الجديد --- */
+        .logo-text {
+            font-family: 'Roboto', sans-serif; /* خط إنجليزي قوي */
+            font-size: 2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            
+            /* إنشاء التدرج المعدني */
+            background: linear-gradient(
+                to right,
+                var(--metal-dark) 0%,
+                var(--metal-light) 25%,
+                var(--metal-shine) 50%, /* نقطة اللمعان البيضاء */
+                var(--metal-light) 75%,
+                var(--metal-dark) 100%
+            );
+            /* جعل الخلفية أكبر من النص لتحريكها */
+            background-size: 200% auto;
+            
+            /* قص الخلفية على شكل النص */
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            
+            /* إضافة ظل لإعطاء عمق 3D */
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+            
+            /* أنميشن التحريك */
+            animation: shineMetal 4s linear infinite reverse;
+        }
+
+        @keyframes shineMetal {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        .lang-btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 8px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            font-family: inherit;
+            font-weight: bold;
+        }
+
+        .lang-btn:hover {
+            background: var(--primary-blue);
+            border-color: var(--accent-color);
+        }
+
+        /* الحاوية الرئيسية */
+        .main-container {
+            text-align: center;
+            padding: 40px 20px;
+            max-width: 900px;
+            width: 100%;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        h1.main-title {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(0, 51, 204, 0.8);
+        }
+
+        p.subtitle {
+            color: #ccc;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* منطقة إدخال المبلغ */
+        .amount-wrapper {
+            background: var(--glass-bg);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            margin-bottom: 50px;
+            display: inline-block;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .amount-input-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .currency { 
+            font-weight: bold; 
+            font-size: 1.5rem; 
+            color: var(--accent-color);
+        }
+
+        #amountInput {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #555;
+            color: white;
+            font-size: 2.5rem;
+            width: 180px;
+            text-align: center;
+            font-family: 'Roboto', sans-serif;
+            font-weight: bold;
+        }
+
+        #amountInput:focus { 
+            outline: none; 
+            border-color: var(--accent-color); 
+        }
+        
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+
+        /* شبكة الكروت */
+        .payment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            width: 100%;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 20px;
+            padding: 30px 20px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            border-color: var(--accent-color);
+        }
+
+        .card-icon {
+            font-size: 45px;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .card h3 { 
+            margin-bottom: 8px; 
+            font-size: 1.2rem;
+        }
+        
+        .card p { 
+            color: #aaa; 
+            font-size: 1rem; 
+            margin-bottom: 20px; 
+            font-family: 'Roboto', sans-serif; 
+            letter-spacing: 1px;
+        }
+
+        .action-hint {
+            font-size: 0.85rem;
+            color: var(--accent-color);
+            background: rgba(0, 212, 255, 0.1);
+            padding: 5px 15px;
+            border-radius: 15px;
+            opacity: 0.8;
+        }
+
+        .card:hover .action-hint {
+            opacity: 1;
+            background: var(--accent-color);
+            color: #000;
+            font-weight: bold;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: auto;
+            padding: 30px;
+            font-size: 0.9rem;
+            color: #666;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* التنبيهات */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent-color);
+            color: #000;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+            z-index: 1000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .toast.show { opacity: 1; visibility: visible; bottom: 50px; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* استجابة الشاشات */
+        @media (max-width: 600px) {
+            .logo-text { font-size: 1.5rem; }
+            h1.main-title { font-size: 1.8rem; }
+            #amountInput { width: 120px; font-size: 2rem; }
+            .payment-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-circles">
+        <div class="circle c1"></div>
+        <div class="circle c2"></div>
+    </div>
+
+    <header>
+        <div class="logo-text">EMBEDDED EG</div>
+        
+        <button class="lang-btn" onclick="toggleLanguage()">English</button>
+    </header>
+
+    <div class="main-container">
+        <h1 class="main-title" id="title">دعم المحتوى التقني</h1>
+        <p class="subtitle" id="subtitle">مساهمتك تساعدنا في الاستمرار وتطوير أكاديمية Embedded EG للأفضل</p>
+
+        <div class="amount-wrapper">
+            <label id="labelAmount" style="display:block; font-weight:bold;">أدخل مبلغ الدعم</label>
+            <div class="amount-input-group">
+                <input type="number" id="amountInput" placeholder="00" min="1">
+                <span class="currency" id="currency">ج.م</span>
+            </div>
+        </div>
+
+        <div class="payment-grid">
+            
+            <div class="card" onclick="handleLocalPayment('01022613174', 'Vodafone Cash')">
+                <i class="fa-solid fa-mobile-screen-button card-icon" style="color: var(--vodafone-red)"></i>
+                <h3>Vodafone Cash</h3>
+                <p>01022613174</p>
+                <span class="action-hint" id="hint1">اضغط للاتصال والتحويل</span>
+            </div>
+
+            <div class="card" onclick="handleLocalPayment('01022613174', 'Telda')">
+                <i class="fa-regular fa-credit-card card-icon" style="color: #fff"></i>
+                <h3>Telda</h3>
+                <p>01022613174</p>
+                <span class="action-hint" id="hint2">اضغط لنسخ الرقم</span>
+            </div>
+
+            <div class="card" onclick="handleLocalPayment('01022613174', 'myFawry')">
+                <i class="fa-solid fa-wallet card-icon" style="color: #ffcc00"></i>
+                <h3>myFawry</h3>
+                <p>01022613174</p>
+                <span class="action-hint" id="hint3">اضغط لنسخ الرقم</span>
+            </div>
+
+            <div class="card" onclick="handlePaypal()">
+                <i class="fa-brands fa-paypal card-icon" style="color: #003087"></i>
+                <h3>PayPal</h3>
+                <p>@webdesiner1</p>
+                <span class="action-hint" id="hint4">اضغط للدفع المباشر</span>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 Embedded EG Academy.
+    </footer>
+
+    <div class="toast" id="toast">تم الإجراء</div>
+
+    <script>
+        const translations = {
+            ar: {
+                title: "دعم المحتوى التقني",
+                subtitle: "مساهمتك تساعدنا في الاستمرار وتطوير أكاديمية Embedded EG للأفضل",
+                labelAmount: "أدخل مبلغ الدعم",
+                currency: "ج.م",
+                hintVodafone: "اضغط للاتصال والتحويل",
+                hintCopy: "اضغط لنسخ الرقم",
+                hintPay: "اضغط للدفع المباشر",
+                toastCopy: "تم نسخ الرقم: ",
+                toastErr: "من فضلك أدخل المبلغ أولاً",
+                toastCall: "جاري فتح الهاتف...",
+                langBtn: "English"
+            },
+            en: {
+                title: "Support Tech Content",
+                subtitle: "Your contribution helps us grow Embedded EG Academy",
+                labelAmount: "Enter Donation Amount",
+                currency: "EGP",
+                hintVodafone: "Tap to Dial & Transfer",
+                hintCopy: "Tap to Copy Number",
+                hintPay: "Tap to Pay",
+                toastCopy: "Number Copied: ",
+                toastErr: "Please enter amount first",
+                toastCall: "Opening dialer...",
+                langBtn: "العربية"
+            }
+        };
+
+        let currentLang = 'ar';
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            const t = translations[currentLang];
+            const btn = document.querySelector('.lang-btn');
+            
+            document.getElementById('title').textContent = t.title;
+            document.getElementById('subtitle').textContent = t.subtitle;
+            document.getElementById('labelAmount').textContent = t.labelAmount;
+            document.getElementById('currency').textContent = t.currency;
+            
+            document.getElementById('hint1').textContent = t.hintVodafone;
+            document.getElementById('hint2').textContent = t.hintCopy;
+            document.getElementById('hint3').textContent = t.hintCopy;
+            document.getElementById('hint4').textContent = t.hintPay;
+
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.body.style.fontFamily = currentLang === 'ar' ? "'Cairo', sans-serif" : "'Roboto', sans-serif";
+            
+            btn.textContent = t.langBtn;
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function handleLocalPayment(number, method) {
+            const amount = document.getElementById('amountInput').value;
+            const t = translations[currentLang];
+
+            // Vodafone Cash (USSD Call)
+            if (method === 'Vodafone Cash') {
+                if (!amount || amount <= 0) {
+                    showToast(t.toastErr);
+                    document.getElementById('amountInput').focus();
+                    return;
+                }
+                // *9*7*Number*Amount#
+                const ussdCode = `*9*7*${number}*${amount}%23`;
+                showToast(t.toastCall);
+                setTimeout(() => {
+                    window.location.href = `tel:${ussdCode}`;
+                }, 500);
+                return;
+            }
+
+            // Telda & Fawry (Copy only due to app limitations)
+            navigator.clipboard.writeText(number).then(() => {
+                showToast(t.toastCopy + number);
+            });
+        }
+
+        function handlePaypal() {
+            const amount = document.getElementById('amountInput').value;
+            // رابط باي بال المباشر
+            let url = "https://paypal.me/webdesiner1"; 
+            
+            if (amount && amount > 0) {
+                url += "/" + amount;
+            }
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>
